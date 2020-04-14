@@ -1,0 +1,116 @@
+<div class="ui-g">
+    <p-toast></p-toast>
+    <p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+    <p-panel header="Datos Consulta">
+        <div style="margin-bottom: 20px;">
+            <p-menubar [model]="items"></p-menubar>
+        </div>
+        <p-table #tt [columns]="cols" [value]="consultas" [responsive]="true" [paginator]="true" 
+        [rows]="5" selectionMode="single" [(selection)]="selectedConsulta" dataKey="id">
+            <ng-template>
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                        {{col.header}}
+                        <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                    </th>
+                    <th>Detalle Consulta</th>
+                </tr>
+                <tr>
+                    <th *ngFor="let col of cols" [ngSwitch]="col.field">
+                        <input *ngSwitchCase="'nombreMedico'" pInputText type="text"
+                            (input)="tt.filter($event.target.value, col.field, col.filterMatchMode)"
+                            placeholder="Buscar por Nombre">
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-columns="columns" let-consultas let-consulta let-rowData>
+                <tr [pSelectableRow]="consulta">
+                    <td *ngFor="let col of columns">
+                        {{consultas[col.field]}}
+                    </td>
+                    <td>
+                        <p-button label="Detalles" (click)="obtenerId($event, consulta)"></p-button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-panel>
+    <p-dialog header="Consulta" [(visible)]="diplayNewConsultaDialog" [responsive]="true" 
+    [modal]="true" [style]="{width: '400px'}">
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="nombre">Nombre Medico</label>
+                </div>
+                <div class="ui-g-8">
+                    <input pInputText id="nombre" [(ngModel)]="consulta.nombreMedico" autofocus />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="fecha">fecha</label>
+                </div>
+                <div class="ui-g-8">
+                    <input pInputText id="fecha" [(ngModel)]="consulta.fecha" />
+                </div>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton icon="pi pi-check" (click)="guardarConsulta()" label="Guardar"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+</div>
+<div class="ui-g" [hidden]="!mostrarTablaDetalle">    
+    <p-panel header="Detalles consulta" >
+    <div>
+        <p-menubar [model]="itemsDetalle"></p-menubar>
+    </div>
+        <p-table #tt [columns]="colsD" [value]="detalles" [paginator]="true" [rows]="5" [responsive]="true"
+        selectionMode="single" [(selection)]="selectedDetalle" dataKey="id">
+            <ng-template pTemplate="header" let-columns>
+                <tr >
+                    <th *ngFor="let col of columns">
+                        {{col.header}}
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-columns="columns" let-detalles  let-detalle>
+                <tr [pSelectableRow]="detalle">
+                    <td *ngFor="let col of columns">
+                        {{detalles[col.field]}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-panel>
+    <p-dialog header="DetalleConsulta" [(visible)]="displayNewDetalleDialog" [responsive]="true" 
+    [modal]="true" [style]="{width: '400px'}">
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="diagnostico">Diagnostico</label>
+                </div>
+                <div class="ui-g-8">
+                    <input pInputText id="diagnostico" [(ngModel)]="detalle.diagnostico" autofocus />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="tratamiento">tratamiento</label>
+                </div>
+                <div class="ui-g-8">
+                    <input pInputText id="tratamiento" [(ngModel)]="detalle.tratamiento"/>
+                </div>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton icon="pi pi-check" (click)="guardarDetalleConsulta()" label="Guardar"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+</div> 
